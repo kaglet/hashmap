@@ -1,0 +1,31 @@
+/* Template code is for testing and example import purposes */
+
+@font-face {
+  font-family: bahianita; 
+  src: url(./assets/fonts/Bahianita/Bahianita-Regular.ttf);
+  font-weight: 600;
+  font-style: normal;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: var(--main-font-family);
+}
+
+:root {
+  --main-font-family: bahianita, system-ui, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+body {
+  font-family: var(--main-font-family);
+  min-height: 100vh;
+}
+
+.test {
+    color: red;
+}
