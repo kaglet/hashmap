@@ -8,6 +8,7 @@ class Hashmap {
         this.bucketsArr = [];
     }
 
+    // Used internally when setting or adding a new key
     hash(key) {
         if (typeof key !== "string") throw new Error("Trying to access index out of bound");
 
@@ -23,18 +24,18 @@ class Hashmap {
 
     set(key, value) {
         // We do not use the key to find the value but rather the index within our limited buckets to find the values (key - value pairs ARE the values inside a linked list)
-        let indexCode = this.hash(key);
-        let bucketEntry = this.bucketsArr[indexCode];
+        let deterministicCode = this.hash(key);
+        let bucketEntry = this.bucketsArr[deterministicCode];
         let nodeValue = { key, value };
         if (bucketEntry === undefined) {
             let list = new LinkedList();
             list.append(nodeValue);
-            bucketEntry = list;
+            this.bucketsArr[deterministicCode] = list;
         } else if(bucketEntry.find(nodeValue) > -1) {
             let matchedKeyIndex = bucketEntry;
-            bucketEntry.editAt(matchedKeyIndex, value)
+            this.bucketsArr[deterministicCode].editAt(matchedKeyIndex, value)
         } else {
-            bucketEntry.append(nodeValue);
+            this.bucketsArr[deterministicCode].append(nodeValue);
             if (this.bucketsArr.length >= this.loadFactor * this.maxLength) {
                 this.maxLength *= 2;
             }

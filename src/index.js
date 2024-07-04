@@ -2,5 +2,9 @@ import Hashmap from "./hashmap.js";
 
 let map = new Hashmap();
 
-console.log(map.hash("hi"));
-console.log(map.hash("ih"));
+map.set("kago", "lizards");
+map.set("lizzie", "alligators");
+map.set("ogak", "wizards");
+map.set("kago", "rats");
+
+console.log(map);
