@@ -1,8 +1,9 @@
 {
-  "name": "template",
+  "name": "hashmap",
   "version": "1.0.0",
-  "description": "",
+  "description": "A hashmap implementation",
   "private": true,
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack --watch --config webpack.dev.js",
@@ -25,5 +26,8 @@
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.0.4",
     "webpack-merge": "^5.10.0"
+  },
+  "dependencies": {
+    "@kago_m/linked_list": "^1.0.0"
   }
 }
