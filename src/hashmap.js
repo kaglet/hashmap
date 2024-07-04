@@ -1,20 +1,21 @@
 import LinkedList from "@kago_m/linked_list";
 
 class Hashmap {
-    constructor(length) {
-        this.length = length;
+    constructor() {
+        this.loadFactor = 0.85;
+        // The length is the technical length of the array which we formally will expand to prevent out of bounds index access not based on determined length
+        this.maxLength = 8;
         this.bucketsArr = [];
     }
 
     hash(key) {
-        // TODO: Apply modulus operation
         if (typeof key !== "string") throw new Error("Trying to access index out of bound");
 
         let hashCode = 0;
            
         const primeNumber = 31;
         for (let i = 0; i < key.length; i++) {
-          hashCode = primeNumber * hashCode + key.charCodeAt(i);
+          hashCode = (primeNumber * hashCode + key.charCodeAt(i)) % this.maxLength;
         }
      
         return hashCode;
@@ -34,6 +35,9 @@ class Hashmap {
             bucketEntry.editAt(matchedKeyIndex, value)
         } else {
             bucketEntry.append(nodeValue);
+            if (this.bucketsArr.length >= this.loadFactor * this.maxLength) {
+                this.maxLength *= 2;
+            }
         }
     }
 }
