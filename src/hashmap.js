@@ -22,8 +22,8 @@ class Hashmap {
         return hashCode;
     } 
 
+    // We do not use the key to find the value but rather the index within our limited buckets to find the values (key - value pairs ARE the values inside a linked list)
     set(key, value) {
-        // We do not use the key to find the value but rather the index within our limited buckets to find the values (key - value pairs ARE the values inside a linked list)
         let deterministicCode = this.hash(key);
         let bucketEntry = this.bucketsArr[deterministicCode];
         let nodeValue = { key, value };
@@ -31,14 +31,23 @@ class Hashmap {
             let list = new LinkedList();
             list.append(nodeValue);
             this.bucketsArr[deterministicCode] = list;
-        } else if(bucketEntry.find(nodeValue) > -1) {
-            let matchedKeyIndex = bucketEntry;
-            this.bucketsArr[deterministicCode].editAt(matchedKeyIndex, value)
-        } else {
-            this.bucketsArr[deterministicCode].append(nodeValue);
-            if (this.bucketsArr.length >= this.loadFactor * this.maxLength) {
-                this.maxLength *= 2;
+            return;
+        } 
+        
+        // Collision occured so traverse linked list in search of matching key for same code else append
+        let curr = this.bucketsArr[deterministicCode];
+        while (curr !== null) {
+            if (curr.head.value.key === key) {
+                curr.head.value.value = value;
+                return;
             }
+            curr = curr.next;
+        }
+        
+        // Append with method available of linked list at this array position
+        this.bucketsArr[deterministicCode].append(nodeValue);
+        if (this.bucketsArr.length >= this.loadFactor * this.maxLength) {
+            this.maxLength *= 2;
         }
     }
 }
