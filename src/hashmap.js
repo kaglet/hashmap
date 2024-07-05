@@ -5,6 +5,7 @@ class Hashmap {
         this.loadFactor = 0.85;
         // The length is the technical length of the array which we formally will expand to prevent out of bounds index access not based on determined length
         this.maxLength = 8;
+        this.size = 0;
         this.bucketsArr = [];
     }
 
@@ -30,15 +31,16 @@ class Hashmap {
         if (bucketEntry === undefined) {
             let list = new LinkedList();
             list.append(nodeValue);
-            this.bucketsArr[deterministicCode] = list;
+            this.bucketsArr[deterministicCode] = list.head;
+            this.size++;
             return;
         } 
         
         // Collision occured so traverse linked list in search of matching key for same code else append
         let curr = this.bucketsArr[deterministicCode];
         while (curr !== null) {
-            if (curr.head.value.key === key) {
-                curr.head.value.value = value;
+            if (curr.value.key === key) {
+                curr.value.value = value;
                 return;
             }
             curr = curr.next;
@@ -46,9 +48,120 @@ class Hashmap {
         
         // Append with method available of linked list at this array position
         this.bucketsArr[deterministicCode].append(nodeValue);
+        this.size++;
         if (this.bucketsArr.length >= this.loadFactor * this.maxLength) {
             this.maxLength *= 2;
         }
+    }
+
+    get(key) {
+        let deterministicCode = this.hash(key);
+        let bucketEntry = this.bucketsArr[deterministicCode];
+        // Key does not exist
+        if (bucketEntry === undefined) return null;
+        
+        // Key exists
+        let curr = this.bucketsArr[deterministicCode];
+        while (curr !== null) {
+            if (curr.value.key === key) return curr.value;
+
+            curr = curr.next;
+        } 
+
+        return null;
+    }
+
+    has(key) {
+        return !!this.get(key);
+    }
+
+    remove(key) {
+        let deterministicCode = this.hash(key);
+        let bucketEntry = this.bucketsArr[deterministicCode];
+        // Key does not exist
+        if (bucketEntry === undefined) return false;
+
+        // Key exists
+        let curr = this.bucketsArr[deterministicCode];
+        let prev;
+        while (curr !== null) {
+            if (curr.value.key === key) {
+                // Still at head so no prev exists
+                if (prev === undefined) {
+                    this.bucketsArr[deterministicCode] = this.bucketsArr[deterministicCode].next === null ? undefined : this.bucketsArr[deterministicCode].next;
+                } else {
+                    prev.next = curr.next;
+                }
+
+                return true;
+            };
+
+            curr = curr.next;
+            prev = curr;
+        } 
+
+        return false;
+    }
+
+    length() {
+        return this.size;
+    }
+
+    clear() {
+        for (let i = 0; i < this.maxLength; i++) {
+            this.bucketsArr[i] = undefined; 
+        }
+    }
+
+    keys() {
+        let keysList = [];
+        for (let i = 0; i < this.maxLength; i++) {
+            if (this.bucketsArr[i]) {
+                keysList.append(this.bucketsArr[i].key);
+            }
+
+            let curr = this.bucketsArr[i].next;
+            while (curr != null) {
+                keysList.append(curr.key);
+                curr = curr.next;
+            }
+        }
+
+        return keysList;
+    }
+
+    values() {
+        let valuesList = [];
+        for (let i = 0; i < this.maxLength; i++) {
+            if (this.bucketsArr[i]) {
+                valuesList.append(this.bucketsArr[i].value);
+            }
+
+            let curr = this.bucketsArr[i].next;
+            while (curr != null) {
+                valuesList.append(curr.value);
+                curr = curr.next;
+            }
+        }
+
+        return valuesList;
+    }
+
+    entries() {
+        let entriesList = [];
+        for (let i = 0; i < this.maxLength; i++) {
+            if (this.bucketsArr[i]) {
+                entriesList.append(`[${this.bucketsArr[i].key} , ${this.bucketsArr[i].value}]`);
+            }
+
+            let curr = this.bucketsArr[i].next;
+            while (curr != null) {
+                entriesList.append(`[${curr.key} , ${curr.value}]`);
+                curr = curr.next;
+            }
+        }
+
+        return entriesList;
     }
 }
 
