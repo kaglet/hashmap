@@ -94,6 +94,7 @@ class Hashmap {
                     prev.next = curr.next;
                 }
 
+                this.size--;
                 return true;
             };
 

@@ -18,3 +18,6 @@ test.set('lion', 'golden')
 
 console.log(test.entries());
 console.log(test);
+
+console.log(test.get("kite"), test.get("kago"), test.has("ice cream"), test.length(), test.keys(), test.values(), test.remove("lion"), test);
+
